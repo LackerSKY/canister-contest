@@ -1,16 +1,20 @@
 <script setup>
 import { ref } from 'vue';
-import { canister_contest_backend } from 'declarations/canister-contest-backend/index';
-let greeting = ref('');
+import Login from "./components/Login.vue";
+import Game from "./components/Game.vue";
 
-async function handleSubmit(e) {
-  e.preventDefault();
-  const target = e.target;
-  const name = target.querySelector('#name').value;
-  await canister_contest_backend.greet(name).then((response) => {
-    greeting.value = response;
-  });
-}
+const showComponent = ref(false);
+const hideComponent = ref(true);
+
+const p1 = ref('');
+const p2 = ref('');
+
+const handleLogin = (player1, player2) => {
+  p1.value = player1;
+  p2.value = player2;
+  showComponent.value = true;
+  hideComponent.value = false;
+};
 </script>
 
 <template>
@@ -18,11 +22,7 @@ async function handleSubmit(e) {
     <img src="/logo2.svg" alt="DFINITY logo" />
     <br />
     <br />
-    <form action="#" @submit="handleSubmit">
-      <label for="name">Enter your name: &nbsp;</label>
-      <input id="name" alt="Name" type="text" />
-      <button type="submit">Click Me!</button>
-    </form>
-    <section id="greeting">{{ greeting }}</section>
+    <Login @login="handleLogin" v-if="hideComponent" />
+    <Game v-if="showComponent" :p1="p1" :p2="p2" />
   </main>
 </template>
