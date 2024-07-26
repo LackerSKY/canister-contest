@@ -42,7 +42,7 @@ const p2 = ref('');
 
 const startGame = () => {
   if (p1.value && p2.value) {
-    emit('login', p1.value, p2.value);
+    emit('login', p1.value.trim(), p2.value).trim();
   } else {
     alert('Please enter names for both players.');
   }

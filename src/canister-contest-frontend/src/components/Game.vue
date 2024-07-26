@@ -20,6 +20,11 @@
           <span class="font-normal">Wins: {{ wins.p2 }}</span>
         </div>
       </div>
+      <div class="flex justify-between text-2xl text-lime-500">
+        <div class="text-center mx-auto">
+          <span class="font-normal">Turn: {{ currentPlayer }}</span>
+        </div>
+      </div>
     </div>
     <div class="grid grid-cols-3 gap-4 mx-auto max-w-[400px]">
       <div
@@ -37,13 +42,19 @@
     <div class="flex space-x-4 mt-6">
       <button
         @click="resetBoard"
-        class="w-1/2 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+        class="w-full py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
       >Reset Board (Backspace)
       </button>
       <button
         @click="goToLogin"
-        class="w-1/2 py-2 bg-gray-600 text-white font-semibold rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-      >Back to Login (Escape)
+        class="w-full py-2 bg-gray-600 text-white font-semibold rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+      >Back to Home (Escape)
+      </button>
+      <button
+        @click="saveResult"
+        class="w-full py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+        id="saveButton"
+      >Save Result & End Game (Enter)
       </button>
     </div>
   </div>
@@ -52,18 +63,21 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { defineProps } from 'vue';
+import { Principal } from '@dfinity/principal';
+import { canister_contest_backend} from 'declarations/canister-contest-backend/index';
 
 const props = defineProps({
   p1: String,
   p2: String,
-  onLogout: Function
+  onLogout: Function,
+  wins: Object
 });
 
 const board = ref(Array(9).fill(''));
 const currentPlayer = ref('X');
 const winner = ref(null);
 const isDraw = ref(false);
-const wins = ref({ p1: 0, p2: 0 });
+const notSaving = ref(true);
 
 const makeMove = (index) => {
   if (!board.value[index] && !winner.value && !isDraw.value) {
@@ -71,10 +85,12 @@ const makeMove = (index) => {
     if (checkWinner()) {
       winner.value = currentPlayer.value;
       if (currentPlayer.value === 'X') {
-        wins.value.p1++;
+        props.wins.p1++;
       } else {
-        wins.value.p2++;
+        props.wins.p2++;
       }
+      // Save result to leaderboard
+      //saveResult();
     } else if (board.value.every(cell => cell)) {
       isDraw.value = true;
     } else {
@@ -85,7 +101,12 @@ const makeMove = (index) => {
 
 const resetBoard = () => {
   board.value = Array(9).fill('');
-  currentPlayer.value = 'X';
+  if ((props.wins.p1+props.wins.p2)%2==0) {
+    currentPlayer.value = 'X';
+  }
+  else {
+    currentPlayer.value = 'O';
+  }
   winner.value = null;
   isDraw.value = false;
 };
@@ -155,6 +176,9 @@ const handleKeydown = (event) => {
     case 'Escape':
       goToLogin();
       return;
+    case 'Enter':
+      saveResult();
+      return;
     default:
       return; 
   }
@@ -164,7 +188,23 @@ const handleKeydown = (event) => {
   }
 };
 
+const saveResult = async () => {
+  if ((winner.value || props.wins.p1 || props.wins.p2) && (notSaving.value)) {
+    notSaving.value=false;
+    const winnerName = props.wins.p1>props.wins.p2 ? props.p1 : props.p2;
+    const score = props.wins.p1>props.wins.p2 ? props.wins.p1.toString() : props.wins.p2.toString();
+    const loserName = props.wins.p1<props.wins.p2 ? props.p1 : props.p2;
+    const score2 = props.wins.p1<props.wins.p2 ? props.wins.p1.toString() : props.wins.p2.toString();
+    const scoresdiff = (parseInt(score)-parseInt(score2)).toString();
+    await canister_contest_backend.add_record(winnerName, score, loserName, score2, scoresdiff);
+    goToLogin();
+  }
+};
+
 const goToLogin = () => {
+  props.wins.p1 = 0;
+  props.wins.p2 = 0;
+  resetBoard();
   props.onLogout(); 
 };
 
