@@ -31,19 +31,19 @@
         {{ cell }}
       </div>
     </div>
-    <div v-if="winner" class="mt-4 text-xl font-semibold text-green-600 text-center">
+    <div v-if="winner || isDraw" class="mt-4 text-xl font-semibold text-center" :class="winner ? 'text-green-600' : 'text-yellow-600'">
       <h2>{{ winnerMessage }}</h2>
     </div>
     <div class="flex space-x-4 mt-6">
       <button
         @click="resetBoard"
         class="w-1/2 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-      >Reset Board
+      >Reset Board (Backspace)
       </button>
       <button
         @click="goToLogin"
         class="w-1/2 py-2 bg-gray-600 text-white font-semibold rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-      >Back to Login
+      >Back to Login (Escape)
       </button>
     </div>
   </div>
@@ -62,10 +62,11 @@ const props = defineProps({
 const board = ref(Array(9).fill(''));
 const currentPlayer = ref('X');
 const winner = ref(null);
+const isDraw = ref(false);
 const wins = ref({ p1: 0, p2: 0 });
 
 const makeMove = (index) => {
-  if (!board.value[index] && !winner.value) {
+  if (!board.value[index] && !winner.value && !isDraw.value) {
     board.value[index] = currentPlayer.value;
     if (checkWinner()) {
       winner.value = currentPlayer.value;
@@ -74,6 +75,8 @@ const makeMove = (index) => {
       } else {
         wins.value.p2++;
       }
+    } else if (board.value.every(cell => cell)) {
+      isDraw.value = true;
     } else {
       currentPlayer.value = currentPlayer.value === 'X' ? 'O' : 'X';
     }
@@ -84,6 +87,7 @@ const resetBoard = () => {
   board.value = Array(9).fill('');
   currentPlayer.value = 'X';
   winner.value = null;
+  isDraw.value = false;
 };
 
 const checkWinner = () => {
@@ -107,6 +111,8 @@ const checkWinner = () => {
 const winnerMessage = computed(() => {
   if (winner.value) {
     return `Winner is ${winner.value === 'X' ? props.p1 : props.p2}!`;
+  } else if (isDraw.value) {
+    return 'It\'s a Draw!';
   }
   return '';
 });
@@ -143,9 +149,12 @@ const handleKeydown = (event) => {
     case '3':
       index = 8;
       break;
-    case 'Escape':
+    case 'Backspace':
       resetBoard();
       return; 
+    case 'Escape':
+      goToLogin();
+      return;
     default:
       return; 
   }
