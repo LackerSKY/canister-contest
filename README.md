@@ -10,7 +10,9 @@ Enter your and your friends name. Then click start (enter) and just play! Click 
 
 If project will be popular, it is possible to add more statistics, like number of rounds, etc. Also accounts (register and login) and statistics for each player. And even more, who knows :D
 
-### Automaticly generated README below.
+##
+
+## Automaticly generated README below.
 
 Welcome to your new `canister-contest` project and to the Internet Computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
 
