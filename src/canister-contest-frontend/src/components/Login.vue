@@ -1,9 +1,9 @@
 <template>
-  <div class="p-6 max-w-md mx-auto bg-white rounded-xl shadow-md space-y-4">
-    <h2 class="text-2xl font-bold text-center mb-4">Tic-Tac-Toe Game!</h2>
+  <div class="p-4 sm:p-6 max-w-full sm:max-w-md mx-auto bg-white rounded-xl shadow-md space-y-4">
+    <h2 class="text-xl sm:text-2xl font-bold text-center mb-4">Tic-Tac-Toe Game!</h2>
     <div class="space-y-4">
       <div class="flex flex-col">
-        <label for="player1" class="text-lg font-semibold">Enter player 1 name (X)</label>
+        <label for="player1" class="text-base sm:text-lg font-semibold">Enter player 1 name (X)</label>
         <input
           id="player1"
           type="text"
@@ -13,7 +13,7 @@
         />
       </div>
       <div class="flex flex-col">
-        <label for="player2" class="text-lg font-semibold">Enter player 2 name (O)</label>
+        <label for="player2" class="text-base sm:text-lg font-semibold">Enter player 2 name (O)</label>
         <input
           id="player2"
           type="text"

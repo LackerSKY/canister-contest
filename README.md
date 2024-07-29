@@ -1,4 +1,16 @@
-# `canister-contest`
+# `Tic-Tac-Toe by LackerSKY - canister-contest`
+
+Project made on blockchain using Vue and Rust. Just simply Tic Tac Toe game with saving results.
+
+## How to play?
+
+Enter your and your friends name. Then click start (enter) and just play! Click buttons or use NumPad. You can either win, lose or draw. After or during each game you can manually clear the board. Only win gives you 1 point. If someone has 1 point, you can save your result in the leaderboard table by clicking save button (enter).
+
+## In the future?
+
+If project will be popular, it is possible to add more statistics, like number of rounds, etc. Also accounts (register and login) and statistics for each player. And even more, who knows :D
+
+### Automaticly generated README below.
 
 Welcome to your new `canister-contest` project and to the Internet Computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
 
@@ -21,7 +33,7 @@ dfx help
 dfx canister --help
 ```
 
-## Running the project locally
+### Running the project locally
 
 If you want to test your project locally, you can use the following commands:
 
@@ -51,7 +63,7 @@ npm start
 
 Which will start a server at `http://localhost:8080`, proxying API requests to the replica at port 4943.
 
-### Note on frontend environment variables
+#### Note on frontend environment variables
 
 If you are hosting frontend code somewhere without using DFX, you may need to make one of the following adjustments to ensure your project does not fetch the root key in production:
 
