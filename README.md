@@ -8,7 +8,7 @@ Enter your and your friends name. Then click start (enter) and just play! Click 
 
 ## In the future?
 
-If project will be popular, it is possible to add more statistics, like number of rounds, etc. Also accounts (register and login) and statistics for each player. And even more, who knows :D
+If project will be popular, it is possible to add more statistics, like number of rounds, etc. Also accounts (register and login) and statistics for each player. Single-player mode? And even more, who knows :D
 
 ##
 
